@@ -1,0 +1,32 @@
+.style {
+  min-height: 120px;
+}
+.style-card {
+  width: 300px;
+}
+
+.modalDialog {
+  position: fixed;
+  display: none;
+  background: rgba(0, 0, 0, 0.8);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBody {
+  background-color: rgba(233, 231, 231, 0.589);
+  width: 50vw;
+  height: 60vh;
+}
+
+.modalDialog.show-modal {
+  display: flex;
+}
+.list{
+  background-color: rgba(245, 245, 245, 0.767);
+}
