@@ -16,6 +16,7 @@ const Words = () => {
   const [info, setInfo] = useState({});
   const wordService = new WordService();
   const { speak } = useSpeechSynthesis();
+  const [perPage, setPerpage] = useState(10);
 
   //#region modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,16 +29,16 @@ const Words = () => {
   }
   //#endregion modal
 
-  const getWords = async (page) => {
+  const getWords = async (page, perPage) => {
     setLoading(true);
-    const response = await wordService.index(page);
+    const response = await wordService.index(page, perPage);
     const responseData = response.data;
     setPgn(responseData);
     setLoading(false);
   };
 
   useEffect(() => {
-    getWords(1);
+    getWords(1, perPage);
   }, []);
 
   function wordInfo(e) {
@@ -60,7 +61,7 @@ const Words = () => {
       .delete(id)
       .then((res) => {
         toastr.success(res.data.message);
-        getWords(1);
+        getWords(1, perPage);
         setLoading(false);
       })
       .catch((err) => {
@@ -74,7 +75,7 @@ const Words = () => {
   if (pgn && pgn.data) {
     wordsDom = pgn.data.map((w, index) => {
       return (
-        <tr key={index}>
+        <tr key={index} className="">
           <td>
             <span
               className="btn btn-link bi bi-trash"
@@ -116,6 +117,12 @@ const Words = () => {
     });
   }
 
+  const updatePerpage = (e) => {
+    const newPage = e.target.dataset.value;
+     setPerpage(newPage);
+     getWords(1, newPage);
+  };
+
   return (
     <div>
       <Loading loading={loading} />
@@ -123,14 +130,55 @@ const Words = () => {
         MY WORDS
       </div>
 
-      <div className="my-2 ">
-        <Link className="btn btn-outline-primary" to={`/words/create`}>
-          Add Words
-        </Link>
+      <div className="d-flex justify-content-between align-item-center ">
+        <div className="my-2 mx-4 ">
+          <Link className="btn btn-outline-primary" to={`/words/create`}>
+            Add Words
+          </Link>
+        </div>
+        <div className="dropdown mx-4">
+          <button
+            className="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            perpage:{perPage}
+          </button>
+          <ul className="dropdown-menu">
+            <li>
+              <span
+                className="dropdown-item"
+                data-value="10"
+                onClick={updatePerpage}
+              >
+                10
+              </span>
+            </li>
+            <li>
+              <span
+                className="dropdown-item"
+                data-value="20"
+                onClick={updatePerpage}
+              >
+                20
+              </span>
+            </li>
+            <li>
+              <span
+                className="dropdown-item"
+                data-value="50"
+                onClick={updatePerpage}
+              >
+                50
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className="table-responsive">
-        <table className="table">
+        <table className="table container">
           <thead>
             <tr className="border container">
               <th></th>
@@ -148,7 +196,7 @@ const Words = () => {
         </table>
       </div>
 
-      <div className="fixed-bottom">
+      <div className="mt-4">
         <Paginator data={pgn} getPageFn={getWords} />
       </div>
 

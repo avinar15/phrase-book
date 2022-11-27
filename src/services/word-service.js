@@ -15,8 +15,8 @@ export default class WordService {
     });
   }
 
-  index(page) {
-    return axios.get(`${serverURL}/api/words?per_page=2&page=${page}`, {
+  index(page, perPage = 10) {
+    return axios.get(`${serverURL}/api/words?per_page=${perPage}&page=${page}`, {
       headers: getCommonHeaders(),
     });
   }
